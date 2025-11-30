@@ -24,7 +24,7 @@ services:
     environment: 
       - MYSQL_ROOT_PASSWORD=rootpassword 
       - MYSQL_DATABASE=cookitdb 
-      - MYSQL_USER=appuser          # ADD THIS
+      - MYSQL_USER=appuser
       - MYSQL_PASSWORD=apppassword 
     volumes: 
       - mariadb-data:/var/lib/mysql 
