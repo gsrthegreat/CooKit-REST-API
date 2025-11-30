@@ -9,6 +9,7 @@ import (
 	"github.com/gsrthegreat/CookIt/internal/auth"
 	"github.com/gsrthegreat/CookIt/internal/database"
 	"github.com/gsrthegreat/CookIt/internal/handlers"
+	"github.com/gsrthegreat/CookIt/internal/middleware"
 )
 
 func main() {
@@ -27,6 +28,7 @@ func main() {
 	auth.InitJWT(jwtSecret)
 
 	authHandler := handlers.NewAuthHandler(db, auth.GenerateToken, auth.ValidateToken)
+	pageHandler := handlers.NewPageHandler()
 
 	mux := http.NewServeMux()
 
@@ -35,6 +37,15 @@ func main() {
 	mux.HandleFunc("/api/v1/register", authHandler.RegisterHandler)
 	mux.HandleFunc("/api/v1/", authHandler.HomeHandler)
 
+	mux.HandleFunc("/login", pageHandler.LoginPageHandler)
+	mux.HandleFunc("/register", pageHandler.RegisterPageHandler)
+	mux.HandleFunc("/", pageHandler.HomePageHandler)
+
+	fs := http.FileServer(http.Dir("./static"))
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+
+	handler := middleware.CORS(mux)
+
 	fmt.Println("server listening at port :8080...")
-	log.Fatal(http.ListenAndServe(":8080", mux))
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }

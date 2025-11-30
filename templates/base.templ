@@ -1,0 +1,52 @@
+package templates
+
+templ Base(title string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>{ title } - CookIt</title>
+			<script src="https://cdn.tailwindcss.com"></script>
+			<style>
+				@keyframes fadeIn {
+					from { opacity: 0; transform: translateY(20px); }
+					to { opacity: 1; transform: translateY(0); }
+				}
+				.fade-in {
+					animation: fadeIn 0.6s ease-out;
+				}
+			</style>
+		</head>
+		<body class="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 min-h-screen">
+			<nav class="bg-white shadow-lg border-b border-orange-200">
+				<div class="container mx-auto px-6 py-4">
+					<div class="flex items-center justify-between">
+						<div class="flex items-center space-x-2">
+							<span class="text-3xl">🍳</span>
+							<span class="text-2xl font-bold text-orange-600">CookIt</span>
+						</div>
+						<div class="flex items-center space-x-6">
+							<a href="/" class="text-gray-700 hover:text-orange-600 transition">Home</a>
+							<a href="/recipes" class="text-gray-700 hover:text-orange-600 transition">Recipes</a>
+							<div id="auth-links">
+								<a href="/login" class="text-gray-700 hover:text-orange-600 transition" id="login-link">Login</a>
+								<a href="/register" class="text-gray-700 hover:text-orange-600 transition ml-4" id="register-link">Register</a>
+								<button onclick="logout()" class="hidden text-gray-700 hover:text-orange-600 transition ml-4" id="logout-btn">Logout</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</nav>
+			<main class="container mx-auto px-6 py-12">
+				{ children... }
+			</main>
+			<footer class="bg-white border-t border-orange-200 mt-20">
+				<div class="container mx-auto px-6 py-8 text-center text-gray-600">
+					<p>© 2024 CookIt. Made with ❤️ and Go</p>
+				</div>
+			</footer>
+			<script src="/static/js/app.js"></script>
+		</body>
+	</html>
+}
