@@ -1,0 +1,46 @@
+services: 
+  api: 
+    # build: 
+    #   context: . 
+    #   dockerfile: Dockerfile 
+    image: gsrthegreat/cookit-api:latest
+    ports: 
+      - "8080:8080" 
+    environment: 
+      - DB_HOST=mariadb 
+      - DB_PORT=3306 
+      - DB_USER=appuser 
+      - DB_PASSWORD=apppassword 
+      - DB_NAME=cookitdb 
+    depends_on: 
+      mariadb:
+        condition: service_healthy
+    networks: 
+      - app-network 
+    restart: unless-stopped 
+
+  mariadb: 
+    image: mariadb:11.2
+    environment: 
+      - MYSQL_ROOT_PASSWORD=rootpassword 
+      - MYSQL_DATABASE=cookitdb 
+      - MYSQL_USER=appuser          # ADD THIS
+      - MYSQL_PASSWORD=apppassword 
+    volumes: 
+      - mariadb-data:/var/lib/mysql 
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks: 
+      - app-network 
+    healthcheck: 
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"] 
+      interval: 10s 
+      timeout: 5s 
+      retries: 5 
+    restart: unless-stopped 
+
+volumes: 
+  mariadb-data: 
+
+networks: 
+  app-network: 
+    driver: bridge
